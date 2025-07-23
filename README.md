@@ -96,3 +96,6 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+`nest generate library common` will create a folder named libs/common and inside this directory, it will create common module, service, index.ts
+`nest generate module database -p common` will create module database inside libs/common directory
