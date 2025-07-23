@@ -100,3 +100,5 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 `nest generate library common` will create a folder named libs/common and inside this directory, it will create common module, service, index.ts
 `nest generate module database -p common` will create module database inside libs/common directory
 `nest g app reservations` will create a folder apps within 2 directories sleepr and reservations.
+`docker run -d --name sleepr_mongo -p 27017:27017 mongo` to run mongodb
+`docker compose up` to run application
