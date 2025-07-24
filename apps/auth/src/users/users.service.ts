@@ -16,20 +16,25 @@ export class UsersService {
         return this.usersRepository.find({});
       }
     
-      findOne(_id: string) {
-        return this.usersRepository.findOne({
-          _id
-        });
-      }
+    findOne(_id: string) {
+      return this.usersRepository.findOne({
+        _id
+      });
+    }
     
-      update(_id: string, updateUserDto: UpdateUserDto) {
-        return this.usersRepository.findOneAndUpdate(
-          {_id},
-          {$set: updateUserDto},
-        )
-      }
-    
-      remove(_id: string) {
-        return this.usersRepository.findOneAndDelete({_id});
-      }
+    findOneByEmail(email: string){
+      return this.usersRepository.findOne({
+        email
+      });
+    }
+    update(_id: string, updateUserDto: UpdateUserDto) {
+      return this.usersRepository.findOneAndUpdate(
+        {_id},
+        {$set: updateUserDto},
+      )
+    }
+  
+    remove(_id: string) {
+      return this.usersRepository.findOneAndDelete({_id});
+    }
 }
