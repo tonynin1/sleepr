@@ -1,16 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users/users.service';
-
+import * as bcrypt from 'bcryptjs'
+import { UserDocument } from './users/models/user.schema';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
+    private readonly jwtService: JwtService
+  ) { }
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
+  async verifyUser(email: string, password: string): Promise<any> {
+    const user = await this.usersService.findOneByEmail(email);
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+
+    if (!passwordIsValid) {
+      throw new UnauthorizedException('Credentials are not valid.');
     }
-    return null;
+    
+    return user;
+  }
+
+  async login (user: UserDocument, response: Response) {
+    const tokenPayLoad = {
+      userId: user._id.toHexString()
+    }
+
+    const expires = new Date();
+    expires.setSeconds(
+      expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
+    );
+
+    const token = this.jwtService.sign(tokenPayLoad);
+
+    response.cookie('Authentication', tokenPayLoad, {
+      httpOnly: true,
+      expires
+    });
   }
 }
