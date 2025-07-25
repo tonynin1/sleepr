@@ -11,6 +11,7 @@ services:
       - '3000:3000'
     volumes:
       - .:/usr/src/app
+
   auth:
     build:
       context: .
@@ -23,5 +24,21 @@ services:
       - '3001:3001'
     volumes:
       - .:/usr/src/app
+
   mongo:
     image: mongo
+    ports:
+      - '27017:27017'
+
+  migration:
+    build:
+      context: .
+      dockerfile: ./libs/migrations/Dockerfile
+      target: development
+    command: pnpm run migrate
+    env_file:
+      - ./libs/migrations/.env
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - mongo
