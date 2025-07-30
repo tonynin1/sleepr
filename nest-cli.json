@@ -21,6 +21,15 @@
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
     },
+    "notifications": {
+      "type": "application",
+      "root": "apps/notifications",
+      "entryFile": "main",
+      "sourceRoot": "apps/notifications/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notifications/tsconfig.app.json"
+      }
+    },
     "payment": {
       "type": "application",
       "root": "apps/payment",

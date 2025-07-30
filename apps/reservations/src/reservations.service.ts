@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nest
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationsRepository } from './reservations.repository';
-import { PAYMENTS_SERVICE } from '@app/common';
+import { PAYMENTS_SERVICE, UserDto } from '@app/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { catchError, map, retry, timeout } from 'rxjs/operators';
 import { firstValueFrom, of } from 'rxjs';
@@ -56,9 +56,12 @@ export class ReservationsService implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy() {
     await this.paymentsService.close();
   }
-  async create(createReservationDto: CreateReservationDto, userId: string) {
+  async create(createReservationDto: CreateReservationDto, {email, _id: userId} : UserDto) {
     return this.paymentsService
-      .send('create_charge', createReservationDto.charge)
+      .send('create_charge', {
+        ...createReservationDto.charge,
+        email,
+      })
       .pipe(
         map((res) => {
           return this.reservationsRepository.create({
@@ -69,49 +72,7 @@ export class ReservationsService implements OnModuleInit, OnModuleDestroy {
           });
         }),
       );
-  }
-  // Alternative approach using subscribe with proper error handling
-  async createWithSubscribe(createReservationDto: CreateReservationDto, userId: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.paymentsService
-        .send('create_charge', createReservationDto.charge)
-        .pipe(
-          timeout(10000),
-          retry({ count: 3, delay: 2000 }),
-          catchError((error) => {
-            this.logger.error('Payment service error:', error);
-            return of({ error: 'Payment failed', details: error.message });
-          })
-        )
-        .subscribe({
-          next: async (response) => {
-            try {
-              if (response.error) {
-                reject(new Error(response.error));
-                return;
-              }
-
-              this.logger.log('Payment response:', response);
-
-              const reservation = await this.reservationsRepository.create({
-                ...createReservationDto,
-                timestamp: new Date(),
-                userId,
-              });
-
-              resolve(reservation);
-            } catch (dbError) {
-              this.logger.error('Database error:', dbError);
-              reject(dbError);
-            }
-          },
-          error: (error) => {
-            this.logger.error('Subscription error:', error);
-            reject(error);
-          }
-        });
-    });
-  }
+  } 
   async findAll() {
     return this.reservationsRepository.find({});
   }
