@@ -32,6 +32,8 @@ services:
       - ./apps/notifications/.env
     volumes:
       - .:/usr/src/app
+    # ports: expose this to test email
+    #   - '3004:3004'
   auth:
     build:
       context: .

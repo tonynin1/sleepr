@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationsRepository } from './reservations.repository';
@@ -56,23 +56,34 @@ export class ReservationsService implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy() {
     await this.paymentsService.close();
   }
-  async create(createReservationDto: CreateReservationDto, {email, _id: userId} : UserDto) {
-    return this.paymentsService
-      .send('create_charge', {
-        ...createReservationDto.charge,
-        email,
-      })
-      .pipe(
-        map((res) => {
-          return this.reservationsRepository.create({
-            ...createReservationDto,
-            invoiceId: res.id,
-            timestamp: new Date(),
-            userId,
-          });
-        }),
+  async create(createReservationDto: CreateReservationDto, { email, _id: userId }: UserDto) {
+    try {
+
+      const chargeResult = await firstValueFrom(
+        this.paymentsService.send('create_charge', {
+          ...createReservationDto.charge,
+          email,
+        }).pipe(
+          timeout(5000), // optional timeout
+          catchError(err => {
+            this.logger.error('Error from payments service', err);
+            throw new BadRequestException('Payment service failed');
+          })
+        )
       );
-  } 
+
+      // Khi có chargeResult, tiếp tục lưu booking
+      return this.reservationsRepository.create({
+        ...createReservationDto,
+        invoiceId: chargeResult.id,
+        timestamp: new Date(),
+        userId,
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new BadRequestException(error?.message || 'Something went wrong');
+    }
+  }
   async findAll() {
     return this.reservationsRepository.find({});
   }
