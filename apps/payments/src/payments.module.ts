@@ -11,10 +11,8 @@ import { LoggerModule } from '@app/common';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        MONGODB_URI: Joi.string().required(),
         PORT: Joi.number().required(),
         STRIPE_PRIVATE_KEY: Joi.string().required(),
-        STRIPE_PUBLIC_KEY: Joi.string().required(),
       })
     }),
   ],

@@ -13,6 +13,7 @@ async function bootstrap() {
       port: configService.get('PORT')
     }
   });
+  app.useLogger(app.get(Logger));
   await app.startAllMicroservices();
 }
 bootstrap();

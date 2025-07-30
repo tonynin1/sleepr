@@ -16,18 +16,22 @@ export class PaymentsService {
     );
   }
 
-  async createCharge({ card, amount }: CreateChargeDto) {
-    const token = await this.stripe.tokens.create({
+  async createCharge(
+    {card, amount} : CreateChargeDto
+  ) {
+    const paymentMethods = await this.stripe.paymentMethods.create({
       type: 'card',
-      card
-    });
-    const charge = await this.stripe.charges.create({
-      amount: Math.round(amount * 100),
-      currency: 'usd',
-      source: token.id,
+      card,
     });
 
-    return charge;
+    const paymentIntent = await this.stripe.paymentIntents.create({
+      payment_method: paymentMethods.id,
+      amount: amount * 100,
+      payment_method_types: ['card'],
+      currency: 'usd'
+    })
+    
+    return paymentIntent;
   }
 
 }

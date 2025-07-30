@@ -7,7 +7,6 @@ import { ReservationDocument, ReservationSchema } from './models/reservation.sch
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import  * as Joi from 'joi';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { homedir } from 'os';
 
 @Module({
   imports: [
@@ -51,6 +50,9 @@ import { homedir } from 'os';
           options: {
             host: configService.get('PAYMENTS_HOST'),
             port: configService.get('PAYMENTS_PORT'),
+            // Add connection resilience options
+            retryattempts: 5,
+            retryRelay: 3000
           },
         }),
         inject: [ConfigService],
