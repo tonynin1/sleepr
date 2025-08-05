@@ -1,4 +1,4 @@
-import { NOTIFICATIONS_SERVCE } from '@app/common';
+import { NOTIFICATIONS_SERVICE } from '@app/common';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
@@ -11,34 +11,37 @@ export class PaymentsService {
 
   constructor(
     private readonly configService: ConfigService,
-    @Inject(NOTIFICATIONS_SERVCE) private readonly notificationsService : ClientProxy
+    @Inject(NOTIFICATIONS_SERVICE) private readonly notificationsService: ClientProxy
   ) {
     this.stripe = new Stripe(
       this.configService.get<string>('STRIPE_PRIVATE_KEY')!,
       {
         apiVersion: '2025-06-30.basil',
+        // apiVersion: '2025-06-30.basil',
       },
     );
   }
 
   async createCharge(
-    {card, amount, email} : PaymentsCreateChargeDto
+    { amount, email }: PaymentsCreateChargeDto
   ) {
-    const paymentMethod = await this.stripe.paymentMethods.create({
-      type: 'card',
-      card
-    })
+    // ❗ dùng token test thay vì tạo từ raw card
     const paymentIntent = await this.stripe.paymentIntents.create({
-      payment_method: paymentMethod.id,
+      payment_method: 'pm_card_visa', // ✅ token test
       amount: amount * 100,
+      currency: 'usd',
       confirm: true,
-      currency: 'usd'
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'never'
+      },    
     });
-    
-    this.notificationsService.emit('notify_email', { 
+
+    this.notificationsService.emit('notify_email', {
       email,
       text: `Your payment of $${amount} has completed successfully.`
     });
+
     return paymentIntent;
   }
 

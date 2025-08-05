@@ -3,14 +3,15 @@ FROM node:alpine AS development
 WORKDIR /usr/src/app
 
 COPY package.json ./
-
 COPY pnpm-lock.yaml ./
 
-RUN npm install -g pnpm
+RUN npm install -g pnpm @nestjs/cli
 
 RUN pnpm install
 
 COPY . .
+
+RUN chmod +x node_modules/.bin/*
 
 RUN pnpm run build
 
