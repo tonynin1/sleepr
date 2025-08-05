@@ -25,5 +25,8 @@
         "libs/common/src/*"
       ]
     }
-  }
+  },
+  "include": [
+    "types.d.ts"
+  ]
 }
