@@ -1,19 +1,19 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users/users.service';
-import * as bcrypt from 'bcryptjs'
+import * as bcrypt from 'bcryptjs';
 import { UserDocument } from './users/models/user.schema';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
-import { NOTIFICATIONS_SERVCE } from '@app/common';
+import { NOTIFICATIONS_SERVICE } from '@app/common';
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    @Inject(NOTIFICATIONS_SERVCE) private readonly notificationsService : ClientProxy
+    @Inject(NOTIFICATIONS_SERVICE) private readonly notificationsService : ClientProxy
   ) { }
 
   async verifyUser(email: string, password: string): Promise<any> {
