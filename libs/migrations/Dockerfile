@@ -5,12 +5,15 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY pnpm-lock.yaml ./
+COPY tsconfig.json tsconfig.json
 
 RUN npm install -g pnpm
 RUN pnpm install
 
-COPY . .
+COPY libs/migrations libs/migrations
+COPY libs libs
 
+RUN cd libs/migrations && pnpm install
 RUN pnpm run build
 
 # Stage production
