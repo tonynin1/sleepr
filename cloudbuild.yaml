@@ -12,7 +12,8 @@ steps:
   # Push auth image
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - ['push' ,'asia-east1-docker.pkg.dev/sleepr-467504/reservations/production']
+      - 'push'
+      - 'asia-east1-docker.pkg.dev/sleepr-467504/reservations/production'
 
 ### notifications
   # Build notifications service
@@ -28,7 +29,8 @@ steps:
   # Push notifications image
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - ['push' , 'asia-east1-docker.pkg.dev/sleepr-467504/notifications/production']
+      - 'push'
+      - 'asia-east1-docker.pkg.dev/sleepr-467504/notifications/production'
 
 ### payments
   # Build payments service
@@ -45,7 +47,8 @@ steps:
   # Push payments image
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - ['push' ,'asia-east1-docker.pkg.dev/sleepr-467504/payments/production']
+      - 'push'
+      - 'asia-east1-docker.pkg.dev/sleepr-467504/payments/production'
 
 ### Reservations
   # Build reservations service
@@ -61,14 +64,5 @@ steps:
   # Push reservations image
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - ['push', 'asia-east1-docker.pkg.dev/sleepr-467504/reservations/production']
-
-images:
-  - 'asia-east1-docker.pkg.dev/sleepr-467504/auth/production'
-  - 'asia-east1-docker.pkg.dev/sleepr-467504/notifications/production'
-  - 'asia-east1-docker.pkg.dev/sleepr-467504/payments/production'
-  - 'asia-east1-docker.pkg.dev/sleepr-467504/reservations/production'
-
-options:
-  logging: CLOUD_LOGGING_ONLY
-  machineType: 'E2_HIGHCPU_8'
+      - 'push'
+      - 'asia-east1-docker.pkg.dev/sleepr-467504/reservations/production'
