@@ -31,9 +31,6 @@ RUN npm install -g pnpm
 
 RUN pnpm install --prod
 
-COPY apps/payments/package.json ./apps/payments/package.json
-RUN cd apps/payments && pnpm install --prod
-
 COPY --from=development /usr/src/app/dist ./dist
 
 CMD ["node", "dist/apps/payments/main"]

@@ -31,9 +31,6 @@ RUN npm install -g pnpm
 
 RUN pnpm install --prod
 
-COPY apps/auth/package.json ./apps/auth/package.json
-RUN cd apps/auth && pnpm install --prod
-
 COPY --from=development /usr/src/app/dist ./dist
 
 CMD ["node", "dist/apps/auth/main"]

@@ -31,9 +31,6 @@ RUN npm install -g pnpm
 
 RUN pnpm install --prod
 
-COPY apps/reservations/package.json ./apps/reservations/package.json
-RUN cd apps/reservations && pnpm install --prod
-
 COPY --from=development /usr/src/app/dist ./dist
 
 CMD ["node", "dist/apps/reservations/main"]

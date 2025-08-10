@@ -31,9 +31,6 @@ RUN npm install -g pnpm
 
 RUN pnpm install --prod
 
-COPY apps/notifications/package.json ./apps/notifications/package.json
-RUN cd apps/notifications && pnpm install --prod
-
 COPY --from=development /usr/src/app/dist ./dist
 
 CMD ["node", "dist/apps/notifications/main"]
