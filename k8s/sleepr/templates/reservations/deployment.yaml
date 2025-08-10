@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reservations
+  name: reservations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reservations
+  template:
+    metadata:
+      labels:
+        app: reservations
+    spec:
+      imagePullSecrets:
+        - name: gcr-json-key
+      containers:
+        - image: asia-east1-docker.pkg.dev/sleepr-467504/reservations/production
+          name: reservations

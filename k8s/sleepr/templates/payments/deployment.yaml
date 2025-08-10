@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: payments
+  name: payments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments
+  template:
+    metadata:
+      labels:
+        app: payments
+    spec:
+      imagePullSecrets:
+          - name: gcr-json-key
+      containers:
+        - image: asia-east1-docker.pkg.dev/sleepr-467504/payments/production
+          name: payments

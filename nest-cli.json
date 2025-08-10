@@ -58,6 +58,10 @@
       }
     }
   },
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/reservations/tsconfig.app.json"
+  },
   "monorepo": true,
   "root": "apps/reservations"
 }
