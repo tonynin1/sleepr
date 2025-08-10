@@ -17,5 +17,6 @@ spec:
       imagePullSecrets:
           - name: gcr-json-key
       containers:
-        - image: asia-east1-docker.pkg.dev/sleepr-467504/notifications/production
+        - image: asia-east1-docker.pkg.dev/sleepr-467504/notifications/production:final
           name: notifications
+          imagePullPolicy: Always

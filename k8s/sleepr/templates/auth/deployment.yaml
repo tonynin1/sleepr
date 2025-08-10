@@ -17,5 +17,6 @@ spec:
       imagePullSecrets:
           - name: gcr-json-key
       containers:
-        - image: asia-east1-docker.pkg.dev/sleepr-467504/auth/production
+        - image: asia-east1-docker.pkg.dev/sleepr-467504/auth/production:final
           name: auth
+          imagePullPolicy: Always
