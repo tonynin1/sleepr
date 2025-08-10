@@ -3,16 +3,19 @@ FROM node:alpine AS development
 WORKDIR /usr/src/app
 
 COPY package.json ./
-
 COPY pnpm-lock.yaml ./
+COPY tsconfig.json tsconfig.json
+COPY nest-cli.json nest-cli.json
 
 RUN npm install -g pnpm
-
 RUN pnpm install
 
-COPY . .
+COPY apps/payments apps/payments
+COPY libs libs
 
-RUN pnpm run build
+RUN cd apps/payments && pnpm install
+RUN cd libs/migrations && pnpm install
+RUN pnpm run build payments
 
 FROM node:alpine as production
 
@@ -27,6 +30,9 @@ COPY pnpm-lock.yaml ./
 RUN npm install -g pnpm
 
 RUN pnpm install --prod
+
+COPY apps/payments/package.json ./apps/payments/package.json
+RUN cd apps/payments && pnpm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist
 

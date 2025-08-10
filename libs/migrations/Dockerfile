@@ -5,13 +5,15 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 COPY pnpm-lock.yaml ./
+COPY tsconfig.json tsconfig.json
 
 RUN npm install -g pnpm
+
+COPY libs/migrations libs/migrations
+COPY libs libs
+
 RUN pnpm install
-
-COPY . .
-
-RUN pnpm run build
+RUN pnpm run build migrations
 
 # Stage production
 FROM node:alpine AS production
