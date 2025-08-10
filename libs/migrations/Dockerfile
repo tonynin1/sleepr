@@ -8,13 +8,12 @@ COPY pnpm-lock.yaml ./
 COPY tsconfig.json tsconfig.json
 
 RUN npm install -g pnpm
-RUN pnpm install
 
 COPY libs/migrations libs/migrations
 COPY libs libs
 
-RUN cd libs/migrations && pnpm install
-RUN pnpm run build
+RUN pnpm install
+RUN pnpm run build migrations
 
 # Stage production
 FROM node:alpine AS production
