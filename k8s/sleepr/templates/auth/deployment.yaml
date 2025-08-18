@@ -20,3 +20,9 @@ spec:
         - image: asia-east1-docker.pkg.dev/sleepr-467504/auth/production:final
           name: auth
           imagePullPolicy: Always
+          env:
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongodb
+                key: connectionString

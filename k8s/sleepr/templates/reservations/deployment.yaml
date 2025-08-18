@@ -20,3 +20,10 @@ spec:
         - image: asia-east1-docker.pkg.dev/sleepr-467504/reservations/production:final
           name: reservations
           imagePullPolicy: Always
+          env:
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongodb
+                key: connectionString
+
