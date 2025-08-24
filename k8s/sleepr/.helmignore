@@ -21,3 +21,6 @@
 .idea/
 *.tmproj
 .vscode/
+# Node modules
+../../apps/*/node_modules/
+../../libs/*/node_modules/

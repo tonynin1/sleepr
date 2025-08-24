@@ -20,3 +20,22 @@ spec:
         - image: asia-east1-docker.pkg.dev/sleepr-467504/notifications/production:final
           name: notifications
           imagePullPolicy: Always
+          env:
+            - name: PORT
+              value: "3000"
+            - name: GOOGLE_OAUTH_CLIENT_ID
+              value: 1098887806263-bk22cafn28a9s5ae4p7r6708acgdkbqs.apps.googleusercontent.com
+            - name: SMTP_USER
+              value: daivietvonin1@gmail.com
+            - name: GOOGLE_OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: google
+                  key: clientSecret
+            - name: GOOGLE_OAUTH_REFRESH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: google
+                  key: refreshToken
+          ports:
+            - containerPort: 3000
