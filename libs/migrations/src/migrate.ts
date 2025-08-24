@@ -18,7 +18,7 @@ async function runMigrations() {
     const app = await NestFactory.createApplicationContext(MigrationConfigModule);
     const configService = app.get(ConfigService);
 
-    const MONGODB_URI = configService.get<string>('MONGODB_URI', 'mongodb://mongo:27017/sleepr');
+    const MONGODB_URI = configService.get<string>('MONGODB_URI', 'mongodb://mongo:27018/sleepr');
 
     const client = new MongoClient(MONGODB_URI);
     await client.connect();

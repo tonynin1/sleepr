@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from './users/users.module';
-import { LoggerModule, NOTIFICATIONS_SERVICE } from '@app/common';
+import { LoggerModule, NOTIFICATIONS_SERVICE, HealthModule } from '@app/common';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
@@ -49,6 +49,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         inject: [ConfigService]
       },
     ]),
+    HealthModule
   ],
   controllers: [AuthController],
   providers: [
